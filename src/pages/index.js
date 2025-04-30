@@ -2,7 +2,7 @@
 import {useEffect } from 'react';
 import Head from 'next/head';
 import { useState } from 'react';
-
+import Link from 'next/link';
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [displayText, setDisplayText] = useState('');
@@ -12,24 +12,29 @@ export default function Home() {
   const blueText = "Advance Your Career";
 
   useEffect(() => {
-    let timer;
-    
-    // First type the regular text
-    if (displayText.length < fullText.length && isTyping) {
-      timer = setTimeout(() => {
-        setDisplayText(fullText.substring(0, displayText.length + 1));
-      }, 100);
-    } 
-    // Then type the highlighted text
-    else if (highlightedText.length < blueText.length && isTyping) {
-      timer = setTimeout(() => {
-        setHighlightedText(blueText.substring(0, highlightedText.length + 1));
-      }, 100);
-    } else {
-      setIsTyping(false);
+    if (window.location.hash) {
+      window.location.hash = ''; // Reset hash to prevent scrolling
     }
-    
-    return () => clearTimeout(timer);
+    // This ensures the effect runs only on the client-side
+    if (typeof window !== 'undefined') {
+      let timer;
+      // First type the regular text
+      if (displayText.length < fullText.length && isTyping) {
+        timer = setTimeout(() => {
+          setDisplayText(fullText.substring(0, displayText.length + 1));
+        }, 100);
+      } 
+      // Then type the highlighted text
+      else if (highlightedText.length < blueText.length && isTyping) {
+        timer = setTimeout(() => {
+          setHighlightedText(blueText.substring(0, highlightedText.length + 1));
+        }, 100);
+      } else {
+        setIsTyping(false);
+      }
+
+      return () => clearTimeout(timer);
+    }
   }, [displayText, highlightedText, isTyping]);
 
   // Define the feature cards content
@@ -119,31 +124,31 @@ export default function Home() {
         <nav className="container mx-auto flex justify-between items-center py-4 px-6">
           <div className="text-2xl font-bold text-blue-400">MyLMS</div>
 
-          {/* Desktop Navigation */}
+{/* Desktop Navigation */}
 <ul className="hidden md:flex space-x-8 text-gray-300">
   <li>
-    <a href="#courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+    <Link href="/courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Courses
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-    </a>
+    </Link>
   </li>
   <li>
-    <a href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+    <Link href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Learning Paths
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-    </a>
+    </Link>
   </li>
   <li>
-    <a href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+    <Link href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Testimonials
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-    </a>
+    </Link>
   </li>
   <li>
-    <a href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+    <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Contact
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-    </a>
+    </Link>
   </li>
 </ul>
 
@@ -152,32 +157,32 @@ export default function Home() {
   <div className="md:hidden border-t border-gray-800">
     <ul className="bg-gray-900 py-3">
       <li className="block px-6 py-2">
-        <a href="#courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
+        <Link href="/courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
           Courses
-        </a>
+        </Link>
       </li>
       <li className="block px-6 py-2">
-        <a href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
+        <Link href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
           Learning Paths
-        </a>
+        </Link>
       </li>
       <li className="block px-6 py-2">
-        <a href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
+        <Link href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
           Testimonials
-        </a>
+        </Link>
       </li>
       <li className="block px-6 py-2">
-        <a href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
+        <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
           Contact
-        </a>
+        </Link>
       </li>
       <li className="block px-6 py-2">
-        <a
+        <Link
           href="/register"
           className="inline-block bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300 font-medium tracking-wide shadow-md hover:shadow-lg"
         >
           Sign Up
-        </a>
+        </Link>
       </li>
     </ul>
   </div>

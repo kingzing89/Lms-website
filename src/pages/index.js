@@ -132,20 +132,15 @@ export default function Home() {
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
     </Link>
   </li>
+
   <li>
-    <Link href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
-      Learning Paths
+    <Link href="/subscriptions" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+      Subscriptions
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
     </Link>
   </li>
   <li>
-    <Link href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
-      Testimonials
-      <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-    </Link>
-  </li>
-  <li>
-    <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+    <Link href="/contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Contact
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
     </Link>
@@ -189,15 +184,14 @@ export default function Home() {
 )}
 
           {/* Sign In button */}
-          <div className="hidden md:block">
-            <a
-              href="/register"
-              className="bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600"
-            >
+          <Link href={'/register'}>
+          <div className="hidden md:block bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600">
               Become a Member
-            </a>
           </div>
+          </Link>
+          
         </nav>
+        
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
@@ -252,16 +246,10 @@ export default function Home() {
               </p>
               <div className="flex space-x-4">
                 <a
-                  href="#courses"
+                  href="/courses"
                   className="bg-blue-500 text-gray-100 px-5 py-2 rounded-md hover:bg-blue-600"
                 >
                   Browse Courses
-                </a>
-                <a
-                  href="#paths"
-                  className="border border-blue-400 text-blue-400 px-5 py-2 rounded-md hover:bg-gray-800"
-                >
-                  View Paths
                 </a>
               </div>
             </div>
@@ -366,55 +354,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Learning Paths Section - Updated with new background color */}
-      <section id="paths" className="py-16 bg-gradient-to-b from-teal-900 to-blue-900">
-        <div className="container mx-auto px-6">
-          <h2 className="text-2xl font-bold mb-8 text-gray-100">Learning Paths</h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Front-End Developer",
-                courses: 8,
-                hours: 42,
-                description: "Master HTML, CSS, JavaScript and React.",
-              },
-              {
-                title: "Back-End Developer",
-                courses: 6,
-                hours: 36,
-                description:
-                  "Learn server-side programming with Node.js and databases.",
-              },
-              {
-                title: "Data Scientist",
-                courses: 9,
-                hours: 52,
-                description:
-                  "Master data analysis, visualization and machine learning.",
-              },
-            ].map((path, i) => (
-              <div
-                key={i}
-                className="border border-teal-700 bg-gray-800 rounded-lg p-6 hover:border-teal-400"
-              >
-                <h3 className="text-xl font-semibold mb-3 text-gray-100">{path.title}</h3>
-                <div className="flex text-sm text-gray-400 mb-3">
-                  <div className="mr-4">{path.courses} Courses</div>
-                  <div>{path.hours} Hours</div>
-                </div>
-                <p className="text-gray-300 mb-4">{path.description}</p>
-                <a
-                  href={`/path/${i}`}
-                  className="text-teal-400 hover:underline"
-                >
-                  View Path →
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+  
 
       {/* Testimonials */}
       <section id="testimonials" className="py-16 bg-gray-900">
@@ -495,11 +435,6 @@ export default function Home() {
                 <li>
                   <a href="#paths" className="hover:text-gray-100">
                     Learning Paths
-                  </a>
-                </li>
-                <li>
-                  <a href="#testimonials" className="hover:text-gray-100">
-                    Testimonials
                   </a>
                 </li>
                 <li>

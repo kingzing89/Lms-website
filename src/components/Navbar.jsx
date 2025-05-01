@@ -23,14 +23,14 @@ export default function Navbar() {
           </li>
 
           <li>
-            <Link href="/courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+            <Link href="/subscriptions" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
               Subscriptions
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>
           </li>
          
           <li>
-            <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
+            <Link href="/contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
               Contact
               <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>

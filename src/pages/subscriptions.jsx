@@ -147,9 +147,7 @@ export default function Subscriptions() {
             <Link href="/subscriptions">
               <span className="text-gray-300 hover:text-white cursor-pointer">Subscriptions</span>
             </Link>
-            <Link href="/contact">
-              <span className="text-gray-300 hover:text-white cursor-pointer">Contact</span>
-            </Link>
+           
           </div>
           <p className="text-gray-400">© {new Date().getFullYear()} MyLMS. All rights reserved.</p>
         </div>

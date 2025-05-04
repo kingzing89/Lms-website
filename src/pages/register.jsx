@@ -1,23 +1,68 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import Link from 'next/link';
-
-export default function LoginComponent() {
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { useRouter } from 'next/router';
+export default function RegisterComponent() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const router = useRouter();  // Initialize useRouter
+
+  const validate = () => {
+    const newErrors = {};
+    
+    if (!name.trim()) newErrors.name = 'Name is required';
+    if (!email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
+    
+    if (!password) newErrors.password = 'Password is required';
+    else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    
+    if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
+
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log('Login attempt with:', { email, password });
-      // Here you would normally handle authentication
-    }, 1500);
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push('/dashboard');
+        console.log('User created:', data);
+      } else {
+        console.error('Error:', data.message);
+        setErrors({ ...errors, general: data.message }); 
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setErrors({ ...errors, general: 'An error occurred. Please try again later.' });
+    } finally {
+      setIsLoading(false); 
+    }
   };
 
   return (
@@ -33,10 +78,37 @@ export default function LoginComponent() {
           </p>
         </div>
 
-        {/* Login Form */}
+        {/* Registration Form */}
         <div className="mt-8 rounded-lg bg-gray-900 px-8 py-10 shadow-2xl">
-          <h2 className="mb-6 text-center text-2xl font-extrabold text-white">Sign in to your account</h2>
+          <h2 className="mb-6 text-center text-2xl font-extrabold text-white">Create your account</h2>
           <div className="space-y-6">
+            {/* Full Name */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+                Full Name
+              </label>
+              <div className="relative mt-1">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <User className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
+                    errors.name ? 'ring-2 ring-red-500' : ''
+                  }`}
+                  placeholder="Example name"
+                />
+              </div>
+              {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+            </div>
+
+            {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 Email address
@@ -53,12 +125,16 @@ export default function LoginComponent() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
+                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
+                    errors.email ? 'ring-2 ring-red-500' : ''
+                  }`}
                   placeholder="you@example.com"
                 />
               </div>
+              {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                 Password
@@ -71,11 +147,13 @@ export default function LoginComponent() {
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
+                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
+                    errors.password ? 'ring-2 ring-red-500' : ''
+                  }`}
                   placeholder="••••••••"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -92,51 +170,69 @@ export default function LoginComponent() {
                   </button>
                 </div>
               </div>
+              {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+              <p className="mt-1 text-xs text-gray-400">Password must be at least 8 characters</p>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
+                Confirm Password
+              </label>
+              <div className="relative mt-1">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Lock className="h-5 w-5 text-gray-500" />
+                </div>
                 <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
+                    errors.confirmPassword ? 'ring-2 ring-red-500' : ''
+                  }`}
+                  placeholder="••••••••"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                  Remember me
-                </label>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="text-gray-400 hover:text-gray-300 focus:outline-none"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">
-                  Forgot your password?
-                </a>
-              </div>
+              {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
             </div>
 
+            {/* Submit Button */}
             <div>
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75"
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? 'Creating account...' : 'Create account'}
               </button>
             </div>
           </div>
-
-          
         </div>
 
-        {/* Sign up link */}
+        {/* Login link */}
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-400">
-            Don't have an account?{' '}
-            <Link href={"/login"}>
-            <span  className="font-medium text-indigo-400 hover:text-indigo-300">
-              Sign up now
-            </span>
-            </Link>
+            Already have an account?{' '}
+            <a href="/login" className="font-medium text-indigo-400 hover:text-indigo-300">
+              Sign in
+            </a>
           </p>
         </div>
       </div>

@@ -139,12 +139,12 @@ export default function Home() {
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
     </Link>
   </li>
-  <li>
+  {/* <li>
     <Link href="/contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
       Contact
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
     </Link>
-  </li>
+  </li> */}
 </ul>
 
 {/* Mobile Navigation */}
@@ -166,11 +166,11 @@ export default function Home() {
           Testimonials
         </Link>
       </li>
-      <li className="block px-6 py-2">
+      {/* <li className="block px-6 py-2">
         <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
           Contact
         </Link>
-      </li>
+      </li> */}
       <li className="block px-6 py-2">
         <Link
           href="/register"
@@ -212,11 +212,11 @@ export default function Home() {
                   Testimonials
                 </a>
               </li>
-              <li className="block px-6 py-2">
+              {/* <li className="block px-6 py-2">
                 <a href="#contact" className="hover:text-blue-400">
                   Contact
                 </a>
-              </li>
+              </li> */}
               <li className="block px-6 py-2">
                 <a
                   href="/register"
@@ -401,7 +401,6 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="py-16 bg-gray-800">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-2xl font-bold mb-4 text-gray-100">Contact Us</h2>
           <p className="text-gray-300 mb-6">
             Have questions? We're here to help.
           </p>
@@ -437,11 +436,11 @@ export default function Home() {
                     Learning Paths
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#contact" className="hover:text-gray-100">
                     Contact
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div>

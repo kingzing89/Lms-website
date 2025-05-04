@@ -78,7 +78,7 @@ export default function CourseDetail() {
       setCourse(selectedCourse);
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id,courses]);
 
   if (isLoading) {
     return (
@@ -165,7 +165,7 @@ export default function CourseDetail() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="bg-gray-900 rounded-lg p-8 mb-8">
-              <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
+              <h2 className="text-2xl font-bold mb-6">What You will Learn</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {course.topics.map((topic, index) => (
                   <div key={index} className="flex items-start">

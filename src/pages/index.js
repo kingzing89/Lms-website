@@ -1,43 +1,63 @@
 // pages/index.js
 import {useEffect } from 'react';
+import { useAuth } from '../../src/contexts/AuthContext';
 import Head from 'next/head';
 import { useState } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+ const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [displayText, setDisplayText] = useState('');
   const [highlightedText, setHighlightedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const fullText = "Learn Tech Skills to ";
   const blueText = "Advance Your Career";
+  const { isLoggedIn } = useAuth();
+
 
   useEffect(() => {
     if (window.location.hash) {
-      window.location.hash = ''; // Reset hash to prevent scrolling
+      window.location.hash = '';
     }
-    // This ensures the effect runs only on the client-side
     if (typeof window !== 'undefined') {
       let timer;
-      // First type the regular text
       if (displayText.length < fullText.length && isTyping) {
         timer = setTimeout(() => {
           setDisplayText(fullText.substring(0, displayText.length + 1));
         }, 100);
-      } 
-      // Then type the highlighted text
-      else if (highlightedText.length < blueText.length && isTyping) {
+      } else if (highlightedText.length < blueText.length && isTyping) {
         timer = setTimeout(() => {
           setHighlightedText(blueText.substring(0, highlightedText.length + 1));
         }, 100);
       } else {
         setIsTyping(false);
       }
-
       return () => clearTimeout(timer);
     }
   }, [displayText, highlightedText, isTyping]);
 
-  // Define the feature cards content
+  // State for random courses fetched from API
+  const [randomCourses, setRandomCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
+  const [coursesError, setCoursesError] = useState(null);
+
+  // Fetch 3 random courses on mount
+  useEffect(() => {
+    async function fetchRandomCourses() {
+      try {
+        const res = await fetch('/api/courses/random');
+        if (!res.ok) throw new Error('Failed to fetch courses');
+        const json = await res.json();
+        setRandomCourses(json.data || []);
+      } catch (err) {
+        setCoursesError(err.message);
+      } finally {
+        setCoursesLoading(false);
+      }
+    }
+    fetchRandomCourses();
+  }, []);
+
   const featureCards = [
     {
       title: "Expert Instructors",
@@ -120,115 +140,9 @@ export default function Home() {
       </Head>
 
       {/* Navbar */}
-      <header className="bg-gray-900 shadow-lg border-b border-gray-800 fixed w-full z-10">
-        <nav className="container mx-auto flex justify-between items-center py-4 px-6">
-          <div className="text-2xl font-bold text-blue-400">MyLMS</div>
 
-          {/* Desktop Navigation */}
-          <ul className="hidden md:flex space-x-8 text-gray-300">
-            <li>
-              <Link href="/courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
-                Courses
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-              </Link>
-            </li>
-
-            <li>
-              <Link href="/subscriptions" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
-                Subscriptions
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-              </Link>
-            </li>
-            {/* <li>
-              <Link href="/contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide relative group">
-                Contact
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-              </Link>
-            </li> */}
-          </ul>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-800">
-              <ul className="bg-gray-900 py-3">
-                <li className="block px-6 py-2">
-                  <Link href="/courses" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
-                    Courses
-                  </Link>
-                </li>
-                <li className="block px-6 py-2">
-                  <Link href="#paths" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
-                    Learning Paths
-                  </Link>
-                </li>
-                <li className="block px-6 py-2">
-                  <Link href="#testimonials" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
-                    Testimonials
-                  </Link>
-                </li>
-                {/* <li className="block px-6 py-2">
-                  <Link href="#contact" className="hover:text-blue-400 transition-colors duration-300 font-medium tracking-wide">
-                    Contact
-                  </Link>
-                </li> */}
-                <li className="block px-6 py-2">
-                  <Link
-                    href="/register"
-                    className="inline-block bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300 font-medium tracking-wide shadow-md hover:shadow-lg"
-                  >
-                    Sign Up
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          )}
-
-          {/* Sign In button */}
-          <Link href="/register">
-            <div className="hidden md:block bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600">
-                Become a Member
-            </div>
-          </Link>
-          
-        </nav>
-        
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-800">
-            <ul className="bg-gray-900 py-3">
-              <li className="block px-6 py-2">
-                <Link href="#courses" className="hover:text-blue-400">
-                  Courses
-                </Link>
-              </li>
-              <li className="block px-6 py-2">
-                <Link href="#paths" className="hover:text-blue-400">
-                  Learning Paths
-                </Link>
-              </li>
-              <li className="block px-6 py-2">
-                <Link href="#testimonials" className="hover:text-blue-400">
-                  Testimonials
-                </Link>
-              </li>
-              {/* <li className="block px-6 py-2">
-                <Link href="#contact" className="hover:text-blue-400">
-                  Contact
-                </Link>
-              </li> */}
-              <li className="block px-6 py-2">
-                <Link
-                  href="/register"
-                  className="inline-block bg-blue-500 text-gray-100 px-4 py-2 rounded-md hover:bg-blue-600"
-                >
-                  Sign Up
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
-      </header>
+      <Navbar/>
+ 
 
       {/* Hero Section */}
       <section className="pt-48 pb-48 bg-gradient-to-r from-gray-900 to-gray-800">
@@ -259,93 +173,25 @@ export default function Home() {
 
       {/* Features Section with Flippable Cards */}
       <section className="py-32 bg-gradient-to-b from-indigo-900 to-blue-900">
-  <div className="container mx-auto px-6 min-h-40 flex flex-col justify-center">
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      {featureCards.map((card, index) => (
-        <div key={index} className="flip-card h-96">
-          <div className="flip-card-inner">
-            {/* Front of card */}
-            <div className="flip-card-front p-8 bg-gray-900 rounded-lg border border-indigo-500 flex flex-col items-center justify-center shadow-lg shadow-indigo-500/20">
-              <div className="text-4xl text-blue-400 mb-6">
-                {card.icon}
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">{card.title}</h3>
-              <p className="text-gray-300 text-lg">
-                {card.description}
-              </p>
-            </div>
-            
-            {/* Back of card */}
-            <div className="flip-card-back bg-blue-700 border border-blue-400 text-white p-8 rounded-lg shadow-lg shadow-blue-500/20">
-              <p className="text-xl">{card.backContent}</p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
-      {/* Courses Section - Updated with new background color */}
-      <section id="courses" className="py-16 bg-gradient-to-b from-purple-900 to-indigo-900">
-        <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-100">Popular Courses</h2>
-            <Link href="/all-courses" className="text-blue-400 hover:underline">
-              View All →
-            </Link>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Web Development Bootcamp",
-                level: "Beginner",
-                rating: 4.9,
-                students: 2453,
-                price: "$49.99",
-              },
-              {
-                title: "JavaScript Mastery",
-                level: "Intermediate",
-                rating: 4.8,
-                students: 1897,
-                price: "$39.99",
-              },
-              {
-                title: "Data Science Fundamentals",
-                level: "Beginner",
-                rating: 4.7,
-                students: 1532,
-                price: "$59.99",
-              },
-            ].map((course, i) => (
-              <div
-                key={i}
-                className="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-purple-700 hover:border-purple-500"
-              >
-                <div className="h-40 bg-gray-700"></div>
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-gray-400">
-                      {course.level}
-                    </span>
-                    <div className="flex items-center">
-                      <span className="text-yellow-500 mr-1">★</span>
-                      <span className="text-sm text-gray-300">{course.rating}</span>
+        <div className="container mx-auto px-6 min-h-40 flex flex-col justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            {featureCards.map((card, index) => (
+              <div key={index} className="flip-card h-96">
+                <div className="flip-card-inner">
+                  {/* Front of card */}
+                  <div className="flip-card-front p-8 bg-gray-900 rounded-lg border border-indigo-500 flex flex-col items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <div className="text-4xl text-blue-400 mb-6">
+                      {card.icon}
                     </div>
+                    <h3 className="text-2xl font-bold mb-4 text-white">
+                      {card.title}
+                    </h3>
+                    <p className="text-gray-300 text-lg">{card.description}</p>
                   </div>
-                  <h3 className="text-lg font-semibold mb-3 text-gray-100">{course.title}</h3>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-400 font-bold">
-                      {course.price}
-                    </span>
-                    <Link
-                      href={`/course/${i}`}
-                      className="text-blue-400 hover:underline"
-                    >
-                      Learn More →
-                    </Link>
+
+                  {/* Back of card */}
+                  <div className="flip-card-back bg-blue-700 border border-blue-400 text-white p-8 rounded-lg shadow-lg shadow-blue-500/20">
+                    <p className="text-xl">{card.backContent}</p>
                   </div>
                 </div>
               </div>
@@ -354,30 +200,70 @@ export default function Home() {
         </div>
       </section>
 
-  
-
-      {/* Testimonials */}
-      <section id="testimonials" className="py-16 bg-gray-900">
+      {/* Courses Section - dynamically rendered */}
+      <section
+        id="courses"
+        className="py-16 bg-gradient-to-b from-purple-900 to-indigo-900"
+      >
         <div className="container mx-auto px-6">
-          <h2 className="text-2xl font-bold mb-8 text-gray-100">What Our Students Say</h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-100">
+              Popular Courses
+            </h2>
+            <Link href="/courses" className="text-blue-400 hover:underline">
+              View All →
+            </Link>
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {[1, 2].map((i) => (
-              <div key={i} className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-700 mr-4"></div>
-                  <div>
-                    <h4 className="font-semibold text-gray-100">Student Name</h4>
-                    <p className="text-sm text-gray-400">Web Developer</p>
+          {coursesLoading && (
+            <p className="text-gray-300">Loading courses...</p>
+          )}
+          {coursesError && (
+            <p className="text-red-500">Error: {coursesError}</p>
+          )}
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {randomCourses.length > 0
+              ? randomCourses.map((course, i) => (
+                  <div
+                    key={course._id || i}
+                    className="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-purple-700 hover:border-purple-500"
+                  >
+                    
+                    <div className="p-5">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-gray-400">
+                          {course.level || "N/A"}
+                        </span>
+                        <div className="flex items-center">
+                          <span className="text-yellow-500 mr-1">★</span>
+                          <span className="text-sm text-gray-300">
+                            {course.rating || "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-3 text-gray-100">
+                        {course.title}
+                      </h3>
+                      <div className="flex justify-between items-center">
+                        <span className="text-blue-400 font-bold">
+                          {course.price ? `$${course.price}` : "Subscribtion required"}
+                        </span>
+                        <Link
+                          href={`/courses/${course._id}`}
+                          className="text-blue-400 hover:underline"
+                        >
+                          Learn More →
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <p className="text-gray-300">
-                  The courses were incredibly practical and helped me land my
-                  dream job as a developer. The instructors explain complex
-                  concepts in an easy-to-understand way.
-                </p>
-              </div>
-            ))}
+                ))
+              : !coursesLoading && (
+                  <p className="text-gray-300 col-span-3">
+                    No courses available.
+                  </p>
+                )}
           </div>
         </div>
       </section>
@@ -418,7 +304,9 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-gray-100">MyLMS</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-100">
+                MyLMS
+              </h3>
               <p className="text-gray-400">
                 Helping students master tech skills and transform their careers.
               </p>

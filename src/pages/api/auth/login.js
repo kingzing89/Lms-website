@@ -13,7 +13,7 @@ async function handler(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+    return res.status(500).json({ message: 'Email and password are required' });
   }
 
   try {
@@ -23,14 +23,14 @@ async function handler(req, res) {
     const user = await User.findOne({ email });
     
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(500).json({ message: 'Invalid email or password' });
     }
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(500).json({ message: 'Invalid email or password' });
     }
 
     // Create JWT token
@@ -40,8 +40,6 @@ async function handler(req, res) {
       { expiresIn: '7d' }
     );
 
-   
-
     // Return user data (excluding password)
     const userData = {
       _id: user._id,
@@ -49,7 +47,7 @@ async function handler(req, res) {
       email: user.email
     };
 
-    return res.status(200).json({ message: 'Login successful', user: userData });
+    return res.status(200).json({ message: 'Login successful', user: userData, token });
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ message: 'Internal server error' });

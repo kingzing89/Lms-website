@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useAuth } from '../contexts/AuthContext'; // Make sure this path is correct
+import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginComponent() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,40 +9,19 @@ export default function LoginComponent() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
-  const { login } = useAuth(); // Assuming you have a login function in your AuthContext
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
     setIsLoading(true);
-    setError('');
     
     try {
-      // Call the login API
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      // Update auth context with user data
-      if (login) {
-        await login(data.user);
-      }
-      
-      // Redirect to dashboard or home page after successful login
-      router.push('/dashboard');
+      await login(email, password);
+      // Success - login function will handle redirect
     } catch (error) {
-      console.error('Login error:', error);
-      setError(error.message || 'An error occurred during login');
+      console.error('Login failed:', error);
+      setError(error.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +45,7 @@ export default function LoginComponent() {
           <h2 className="mb-6 text-center text-2xl font-extrabold text-white">Sign in to your account</h2>
           
           {error && (
-            <div className="mb-4 rounded-md bg-red-900/50 p-3 text-sm text-red-200">
+            <div className="mb-4 rounded-md bg-red-900/50 border border-red-800 p-3 text-sm text-red-200">
               <p>{error}</p>
             </div>
           )}
@@ -130,13 +108,11 @@ export default function LoginComponent() {
               </div>
             </div>
 
-         
-
             <div>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
               </button>

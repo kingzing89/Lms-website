@@ -1,88 +1,67 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Courses');
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  const courses = [
-    {
-      id: 1,
-      title: "Spring Boot: Mastering the Fundamentals",
-      description: "Master dependency injection and core Spring Boot concepts to build robust applications.",
-      category: "Backend",
-      image: "/images/spring-boot.png",
-      duration: "6h",
-      part: "PART 1",
-      bgColor: "from-green-400 to-yellow-300",
-      icon: "spring"
-    },
-    {
-      id: 2,
-      title: "Spring Boot: Mastering REST API Development",
-      description: "Build REST APIs, secure them with JWT, and implement advanced features with Spring Boot.",
-      category: "Backend",
-      image: "/images/spring-boot.png",
-      duration: "9h",
-      part: "PART 2",
-      bgColor: "from-green-400 to-yellow-300",
-      icon: "spring"
-    },
-    {
-      id: 3,
-      title: "Complete Python Mastery",
-      description: "Everything you need to program in Python in one course (includes 3 real-world projects).",
-      category: "Programming",
-      image: "/images/python.png",
-      duration: "12h",
-      bgColor: "from-blue-500 via-purple-500 to-pink-500",
-      icon: "python"
-    },
-    {
-      id: 4,
-      title: "React: From Zero to Expert",
-      description: "Build modern, reactive web applications with React and its ecosystem.",
-      category: "Frontend",
-      image: "/images/react.png",
-      duration: "10h",
-      bgColor: "from-cyan-400 to-blue-500",
-      icon: "react"
-    },
-    {
-      id: 5,
-      title: "Node.js: The Complete Guide",
-      description: "Master Node.js by building real-world applications with MongoDB, Express, and more.",
-      category: "Backend",
-      image: "/images/nodejs.png",
-      duration: "14h",
-      bgColor: "from-green-500 to-green-700",
-      icon: "node"
-    },
-    {
-      id: 6,
-      title: "Data Structures & Algorithms in JavaScript",
-      description: "Learn how to implement and use essential data structures and algorithms in JavaScript.",
-      category: "Computer Science",
-      image: "/images/algorithms.png",
-      duration: "8h",
-      bgColor: "from-yellow-400 to-orange-500",
-      icon: "code"
-    }
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/courses');
+
+        console.log('No Courses Exist Here Right Now',response);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch courses');
+        }
+        
+        const data = await response.json();
+        setCourses(data.data);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching courses:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
   
-  const categories = ['All Courses', 'Frontend', 'Backend', 'Programming', 'Computer Science'];
+  const allCategories = courses.length > 0 
+    ? ['All Courses', ...new Set(courses.map(course => course.category).filter(Boolean))]
+    : ['All Courses'];
   
-  // Filter courses based on search and category
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         course.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All Courses' || course.category === selectedCategory;
+                         (course.description && course.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = selectedCategory === 'All Courses' || 
+                           (course.category && course.category === selectedCategory);
     
     return matchesSearch && matchesCategory;
   });
 
-  // Render icon based on course type
+ // Replace your current getCourseImageUrl function with this:
+const getCourseImageUrl = (course) => {
+  if (course.image) {
+    // If image starts with 'images/', prepend your actual S3 domain
+    if (course.image.startsWith('images/')) {
+      return `https://adminjs-media-storage.s3.ap-south-1.amazonaws.com/${course.image}`;
+    }
+    // If it's already a full URL, use as is
+    return course.image;
+  }
+  return null;
+};
+
   const renderIcon = (iconType) => {
     switch(iconType) {
       case 'spring':
@@ -93,10 +72,50 @@ export default function CoursesPage() {
             </svg>
           </div>
         );
+      case 'code':
+        return (
+          <div className="bg-white rounded-full p-2 w-16 h-16 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" width="40" height="40" className="text-yellow-500">
+              <path fill="currentColor" d="M8.5,14.5L4,10l4.5-4.5L7,4L1,10l6,6L8.5,14.5z M15.5,14.5L20,10l-4.5-4.5L17,4l6,6l-6,6L15.5,14.5z"/>
+            </svg>
+          </div>
+        );
       default:
-        return null;
+        return (
+          <div className="bg-white rounded-full p-2 w-16 h-16 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" width="40" height="40" className="text-blue-500">
+              <path fill="currentColor" d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+            </svg>
+          </div>
+        );
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl font-bold mb-6">Build Real-World Skills</h1>
+            <p className="text-xl text-gray-300">Loading courses...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl font-bold mb-6">Something went wrong</h1>
+            <p className="text-xl text-gray-300">Error: {error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white py-32">
@@ -109,7 +128,6 @@ export default function CoursesPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 mb-8">
-          {/* Search bar */}
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -123,14 +141,13 @@ export default function CoursesPage() {
             />
           </div>
 
-          {/* Category dropdown */}
           <div className="md:w-64">
             <select
               className="block w-full py-2 px-3 border border-gray-700 bg-gray-900 text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              {categories.map((category) => (
+              {allCategories.map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -139,33 +156,77 @@ export default function CoursesPage() {
           </div>
         </div>
 
-        {/* Course grid */}
+        {filteredCourses.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">No courses found matching your criteria.</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course) => (
-            <Link key={course.id} href={`/courses/${course.id}`} passHref>
-              {/* <a className="bg-gray-900 rounded-lg overflow-hidden shadow-lg border-2 border-transparent hover:border-blue-500 transition-all duration-300 cursor-pointer hover:shadow-xl"> */}
-                <div className={`h-48 bg-gradient-to-r ${course.bgColor} relative`}>
-                  {course.part && (
-                    <div className="absolute top-0 left-0 bg-green-500 text-white px-3 py-1 text-sm font-medium">
-                      {course.part}
+          {filteredCourses.map((course) => {
+            const imageUrl = getCourseImageUrl(course);
+            
+            return (
+              <Link key={course._id} href={`/courses/${course._id}`}>
+                <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg border-2 border-transparent hover:border-blue-500 transition-all duration-300 cursor-pointer hover:shadow-xl">
+                  <div className={`h-48 relative ${!imageUrl ? `bg-gradient-to-r ${course.bgColor || 'from-blue-500 to-purple-500'}` : ''}`}>
+                    {course.part && (
+                      <div className="absolute top-0 left-0 bg-green-500 text-white px-3 py-1 text-sm font-medium z-10">
+                        {course.part}
+                      </div>
+                    )}
+                    
+                    {imageUrl ? (
+                      <img 
+                        src={imageUrl} 
+                        alt={course.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          
+                          e.target.style.display = 'none';
+                        
+                          const iconDiv = document.createElement('div');
+                          iconDiv.className = 'flex items-center justify-center h-full';
+                          iconDiv.innerHTML = e.target.parentElement.querySelector('.fallback-icon')?.innerHTML || '';
+                          e.target.parentElement.appendChild(iconDiv);
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        {renderIcon(course.icon)}
+                      </div>
+                    )}
+                    
+                    {/* Hidden fallback icon for error handling */}
+                    <div className="fallback-icon" style={{display: 'none'}}>
+                      {renderIcon(course.icon)}
                     </div>
-                  )}
-                  <div className="flex items-center justify-center h-full">
-                    {renderIcon(course.icon)}
+                  </div>
+                  <div className="p-6">
+                    <div className="flex justify-between items-start">
+                      <h3 className="text-xl font-semibold mb-2 flex-1">{course.title}</h3>
+                      <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm">
+                        {course.duration}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 mt-2">{course.description}</p>
+                    {course.level && (
+                      <div className="mt-4">
+                        <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">
+                          {course.level}
+                        </span>
+                      </div>
+                    )}
+                    {course.instructor && (
+                      <div className="mt-3 text-sm text-gray-500">
+                        Instructor: {typeof course.instructor === 'string' ? course.instructor : course.instructor.name}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-xl font-semibold mb-2 flex-1">{course.title}</h3>
-                    <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm">
-                      {course.duration}
-                    </span>
-                  </div>
-                  <p className="text-gray-400 mt-2">{course.description}</p>
-                </div>
-              {/* </a> */}
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

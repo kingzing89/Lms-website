@@ -51,7 +51,7 @@ export default function RegisterComponent() {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/dashboard');
+        router.push('/courses/watch/dashboard');
         console.log('User created:', data);
       } else {
         console.error('Error:', data.message);

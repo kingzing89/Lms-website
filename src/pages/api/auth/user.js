@@ -9,30 +9,37 @@ async function handler(req, res) {
   }
 
   try {
-    const { token } = req.cookies;
-    
-    if (!token) {
-      return res.status(401).json({ message: 'Not authenticated' });
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
     }
 
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+
+    // Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     await connectToDatabase();
     
+    // Find user by ID
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    return res.status(200).json(user);
+    // Return user data
+    const userData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email
+    };
+
+    return res.status(200).json(userData);
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Invalid token' });
-    }
-    
     console.error('Get user error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(401).json({ message: 'Invalid token' });
   }
 }
 

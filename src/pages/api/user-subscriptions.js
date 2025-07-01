@@ -2,9 +2,31 @@
 import mongoose from 'mongoose';
 import connectToDatabase from '../../lib/mongodb';
 import UserSubscription from '@/models/UserSubscription';
+import SubscriptionPlan from '@/models/SubscriptionPlan'; 
 
-
-
+const calculateEndDate = (interval, durationMonths = null) => {
+  const endDate = new Date();
+  
+  if (durationMonths) {
+    endDate.setMonth(endDate.getMonth() + durationMonths);
+  } else {
+    switch (interval?.toLowerCase()) {
+      case 'monthly':
+        endDate.setMonth(endDate.getMonth() + 1);
+        break;
+      case 'yearly':
+        endDate.setFullYear(endDate.getFullYear() + 1);
+        break;
+      case 'quarterly':
+        endDate.setMonth(endDate.getMonth() + 3);
+        break;
+      default:
+        endDate.setMonth(endDate.getMonth() + 1); // Default to monthly
+    }
+  }
+  
+  return endDate;
+};
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -47,32 +69,47 @@ export default async function handler(req, res) {
             subscriptionPlanId, 
             paymentMethod, 
             transactionId,
-            durationMonths = 1 
+            paymentIntentId, // New Stripe field
+            customerId,      // New Stripe field
+            status = 'active',
+            durationMonths
           } = req.body;
 
-          if (!userId || !subscriptionPlanId || !paymentMethod || !transactionId) {
+          // For Stripe integration, we need either transactionId OR paymentIntentId
+          if (!userId || !subscriptionPlanId || (!transactionId && !paymentIntentId)) {
             return res.status(400).json({ 
-              error: 'Missing required fields: userId, subscriptionPlanId, paymentMethod, transactionId' 
+              error: 'Missing required fields: userId, subscriptionPlanId, and either transactionId or paymentIntentId' 
             });
+          }
+
+          // Get the subscription plan to determine duration
+          let plan = null;
+          try {
+            plan = await SubscriptionPlan.findById(subscriptionPlanId);
+          } catch (planError) {
+            console.log('Could not fetch plan details, proceeding with duration fallback');
           }
 
           const existingSubscription = await UserSubscription.findOne({ userId });
           
-          if (existingSubscription) {
-            const startDate = new Date();
-            const endDate = new Date();
-            endDate.setMonth(endDate.getMonth() + durationMonths);
+          const startDate = new Date();
+          const endDate = calculateEndDate(plan?.interval, durationMonths);
 
+          const subscriptionData = {
+            subscriptionPlanId,
+            status,
+            startDate,
+            endDate,
+            paymentMethod: paymentMethod || 'stripe',
+            ...(transactionId && { transactionId }),
+            ...(paymentIntentId && { paymentIntentId }),
+            ...(customerId && { customerId })
+          };
+
+          if (existingSubscription) {
             const updatedSubscription = await UserSubscription.findByIdAndUpdate(
               existingSubscription._id,
-              {
-                subscriptionPlanId,
-                status: 'active',
-                startDate,
-                endDate,
-                paymentMethod,
-                transactionId
-              },
+              subscriptionData,
               { new: true, runValidators: true }
             );
 
@@ -82,18 +119,9 @@ export default async function handler(req, res) {
               subscription: updatedSubscription
             });
           } else {
-            const startDate = new Date();
-            const endDate = new Date();
-            endDate.setMonth(endDate.getMonth() + durationMonths);
-
             const newSubscription = new UserSubscription({
               userId,
-              subscriptionPlanId,
-              status: 'active',
-              startDate,
-              endDate,
-              paymentMethod,
-              transactionId
+              ...subscriptionData
             });
 
             const savedSubscription = await newSubscription.save();
@@ -109,6 +137,8 @@ export default async function handler(req, res) {
           if (error.code === 11000) {
             if (error.keyPattern?.transactionId) {
               res.status(400).json({ error: 'Transaction ID already exists' });
+            } else if (error.keyPattern?.paymentIntentId) {
+              res.status(400).json({ error: 'Payment Intent ID already exists' });
             } else {
               res.status(400).json({ error: 'Duplicate subscription data' });
             }
@@ -120,10 +150,20 @@ export default async function handler(req, res) {
 
       case 'PUT':
         try {
-          const { userId, subscriptionPlanId, durationMonths, transactionId } = req.body;
+          const { 
+            userId, 
+            subscriptionPlanId, 
+            durationMonths, 
+            transactionId,
+            paymentIntentId,
+            customerId,
+            status 
+          } = req.body;
 
-          if (!userId || !transactionId) {
-            return res.status(400).json({ error: 'User ID and Transaction ID are required' });
+          if (!userId || (!transactionId && !paymentIntentId)) {
+            return res.status(400).json({ 
+              error: 'User ID and either Transaction ID or Payment Intent ID are required' 
+            });
           }
 
           const existingSubscription = await UserSubscription.findOne({ userId });
@@ -133,21 +173,32 @@ export default async function handler(req, res) {
           }
 
           const updateData = {
-            transactionId,
-            status: 'active'
+            ...(status && { status }),
+            ...(transactionId && { transactionId }),
+            ...(paymentIntentId && { paymentIntentId }),
+            ...(customerId && { customerId })
           };
 
           if (subscriptionPlanId) {
             updateData.subscriptionPlanId = subscriptionPlanId;
           }
 
-          if (durationMonths) {
+          if (durationMonths || subscriptionPlanId) {
+            // Get plan details if we're updating the plan
+            let plan = null;
+            if (subscriptionPlanId) {
+              try {
+                plan = await SubscriptionPlan.findById(subscriptionPlanId);
+              } catch (planError) {
+                console.log('Could not fetch plan details for duration calculation');
+              }
+            }
+
             const baseDate = existingSubscription.endDate > new Date() 
               ? existingSubscription.endDate 
               : new Date();
             
-            const newEndDate = new Date(baseDate);
-            newEndDate.setMonth(newEndDate.getMonth() + durationMonths);
+            const newEndDate = calculateEndDate(plan?.interval, durationMonths);
             updateData.endDate = newEndDate;
           }
 
@@ -163,8 +214,14 @@ export default async function handler(req, res) {
           });
         } catch (error) {
           console.error('Error updating subscription:', error);
-          if (error.code === 11000 && error.keyPattern?.transactionId) {
-            res.status(400).json({ error: 'Transaction ID already exists' });
+          if (error.code === 11000) {
+            if (error.keyPattern?.transactionId) {
+              res.status(400).json({ error: 'Transaction ID already exists' });
+            } else if (error.keyPattern?.paymentIntentId) {
+              res.status(400).json({ error: 'Payment Intent ID already exists' });
+            } else {
+              res.status(400).json({ error: 'Duplicate data' });
+            }
           } else {
             res.status(500).json({ error: 'Failed to update subscription' });
           }

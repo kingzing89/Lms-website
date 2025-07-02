@@ -66,7 +66,7 @@ export default function CourseDetail() {
 
       fetchCourseData();
     }
-  }, [id]);
+  }, [id,isLoggedIn, token]);
 
 
 const handleEnroll = async () => {

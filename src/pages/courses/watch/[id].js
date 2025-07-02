@@ -234,7 +234,7 @@ export default function CourseVideoPlayer() {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white text-center">
           <h2 className="text-2xl font-bold mb-4">Course Not Found</h2>
-          <p className="text-gray-400 mb-6">The course you're looking for doesn't exist or you don't have access to it.</p>
+          <p className="text-gray-400 mb-6">The course you are looking for doe not exist or you do not have access to it.</p>
           <Link href="/dashboard" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md">
             Back to Dashboard
           </Link>
@@ -303,7 +303,7 @@ export default function CourseVideoPlayer() {
                       ) : (
                         <>
                           <p className="mb-4">No video available</p>
-                          <p className="text-gray-400 text-sm">This lesson doesn't have a video yet</p>
+                          <p className="text-gray-400 text-sm">This lesson does not have a video yet</p>
                         </>
                       )}
                       {videoUrl && (

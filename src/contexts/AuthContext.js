@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
-  }, [token]);
+  }, [token, logout]);
 
   useEffect(() => {
     const checkLoggedIn = async () => {

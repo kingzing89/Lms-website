@@ -117,7 +117,7 @@ const handleEnroll = async () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 text-gray-800 flex items-center justify-center">
         <div className="text-2xl">Loading...</div>
       </div>
     );
@@ -125,11 +125,11 @@ const handleEnroll = async () => {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col items-center justify-center">
         <div className="text-2xl mb-6">Course not found</div>
         <Link
           href="/courses"
-          className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-8 transition-colors"
+          className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-8 transition-colors"
         >
           <ArrowLeft className="mr-2 h-5 w-5" /> Back to Courses
         </Link>
@@ -138,12 +138,12 @@ const handleEnroll = async () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white py-30 ">
+    <div className="min-h-screen bg-gray-50 text-gray-800 py-30 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <Link
           href="/courses"
-          className="inline-flex items-center text-blue-400 hover:text-blue-300 mb-8 transition-colors"
+          className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-8 transition-colors"
         >
           <ArrowLeft className="mr-2 h-5 w-5" /> Back to Courses
         </Link>
@@ -155,23 +155,23 @@ const handleEnroll = async () => {
 
           {/* Course Info */}
           <div className="w-full lg:w-2/3">
-            <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
-            <p className="text-xl text-gray-300 mb-6">{course.description}</p>
+            <h1 className="text-4xl font-bold mb-4 text-gray-900">{course.title}</h1>
+            <p className="text-xl text-gray-600 mb-6">{course.description}</p>
 
             <div className="flex flex-wrap gap-4 mb-8">
-              <div className="flex items-center text-gray-300">
+              <div className="flex items-center text-gray-500">
                 <Clock className="h-5 w-5 mr-2" />
                 <span>{course.duration}</span>
               </div>
-              <div className="flex items-center text-gray-300">
+              <div className="flex items-center text-gray-500">
                 <Book className="h-5 w-5 mr-2" />
                 <span>{getTotalVideoCount()} Videos</span>
               </div>
-              <div className="flex items-center text-gray-300">
+              <div className="flex items-center text-gray-500">
                 <Globe className="h-5 w-5 mr-2" />
                 <span>{course.level}</span>
               </div>
-              <div className="flex items-center text-gray-300">
+              <div className="flex items-center text-gray-500">
                 <Users className="h-5 w-5 mr-2" />
                 <span>{course.category}</span>
               </div>
@@ -180,14 +180,14 @@ const handleEnroll = async () => {
             {isLoggedIn && enrollmentStatus === "enrolled" ? (
               <Link
                 href={`#`}
-                className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-md font-medium transition-colors"
+                className="bg-green-100 hover:bg-green-200 text-green-800 py-3 px-6 rounded-md font-medium transition-colors border border-green-200"
               >
                 Already Enrolled access the course from dashboard
               </Link>
             ) : (
               <button
                 onClick={handleEnroll}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md font-medium transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md font-medium transition-colors shadow-sm"
               >
                 Enroll Now
               </button>
@@ -200,14 +200,14 @@ const handleEnroll = async () => {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Course Description */}
-            <div className="bg-gray-900 rounded-lg p-8 mb-8">
-              <h2 className="text-2xl font-bold mb-6">Course Description</h2>
-              <p className="text-gray-300 mb-4">{course.description}</p>
+            <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border border-gray-200">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Course Description</h2>
+              <p className="text-gray-600 mb-4">{course.description}</p>
             </div>
 
             {/* Course Curriculum */}
-            <div className="bg-gray-900 rounded-lg p-8">
-              <h2 className="text-2xl font-bold mb-6">Course Curriculum</h2>
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Course Curriculum</h2>
 
               {course.chapters && course.chapters.length > 0 ? (
                 <div className="space-y-4">
@@ -216,14 +216,14 @@ const handleEnroll = async () => {
                     .map((chapter) => (
                       <div
                         key={chapter._id}
-                        className="border border-gray-700 rounded-lg overflow-hidden"
+                        className="border border-gray-200 rounded-lg overflow-hidden"
                       >
                         {/* Chapter Header */}
-                        <div className="bg-gray-800 p-4 flex justify-between items-center">
-                          <h3 className="text-lg font-medium">
+                        <div className="bg-gray-100 p-4 flex justify-between items-center">
+                          <h3 className="text-lg font-medium text-gray-900">
                             {chapter.title}
                           </h3>
-                          <div className="text-sm text-gray-400">
+                          <div className="text-sm text-gray-500">
                             {chapter.videos?.length || 0}{" "}
                             {chapter.videos?.length === 1 ? "video" : "videos"}
                           </div>
@@ -231,18 +231,18 @@ const handleEnroll = async () => {
 
                         {/* Chapter Videos */}
                         {chapter.videos && chapter.videos.length > 0 && (
-                          <div className="bg-gray-850">
+                          <div className="bg-white">
                             {chapter.videos.map((video, videoIndex) => (
                               <div
                                 key={video._id}
-                                className="px-6 py-3 border-b border-gray-700 last:border-b-0"
+                                className="px-6 py-3 border-b border-gray-100 last:border-b-0"
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center">
-                                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                                    <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
                                       {videoIndex + 1}
                                     </div>
-                                    <span className="text-gray-300">
+                                    <span className="text-gray-700">
                                       {video.title}
                                     </span>
                                   </div>
@@ -255,7 +255,7 @@ const handleEnroll = async () => {
                     ))}
                 </div>
               ) : (
-                <p className="text-gray-400">
+                <p className="text-gray-500">
                   No curriculum available for this course yet.
                 </p>
               )}
@@ -263,17 +263,17 @@ const handleEnroll = async () => {
           </div>
 
           {/* Instructor Info */}
-          <div className="bg-gray-900 rounded-lg p-8 h-fit">
-            <h2 className="text-2xl font-bold mb-6">Instructor</h2>
+          <div className="bg-white rounded-lg p-8 h-fit shadow-sm border border-gray-200">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">Instructor</h2>
             <div className="flex items-center gap-6">
-              <div className="w-20 h-20 rounded-full bg-gray-700 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
                 <Users className="h-10 w-10 text-gray-400" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">
+                <h3 className="text-xl font-bold text-gray-900">
                   {course.instructor || "Instructor Name"}
                 </h3>
-                <p className="text-gray-300">Course Instructor</p>
+                <p className="text-gray-600">Course Instructor</p>
               </div>
             </div>
           </div>

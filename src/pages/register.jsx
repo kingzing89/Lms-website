@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useRouter } from 'next/router';
+
 export default function RegisterComponent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -66,30 +67,37 @@ export default function RegisterComponent() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black p-4 py-24">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 py-24">
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
             Build Real-World Skills
           </h1>
-          <p className="mt-3 text-base text-gray-300 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl">
+          <p className="mt-3 text-base text-slate-600 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl">
             Master software development with structured courses designed to make you job-ready.
           </p>
         </div>
 
         {/* Registration Form */}
-        <div className="mt-8 rounded-lg bg-gray-900 px-8 py-10 shadow-2xl">
-          <h2 className="mb-6 text-center text-2xl font-extrabold text-white">Create your account</h2>
+        <div className="mt-8 rounded-lg bg-white px-8 py-10 shadow-sm border border-slate-200">
+          <h2 className="mb-6 text-center text-2xl font-extrabold text-slate-900">Create your account</h2>
+          
+          {errors.general && (
+            <div className="mb-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              <p>{errors.general}</p>
+            </div>
+          )}
+          
           <div className="space-y-6">
             {/* Full Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+              <label htmlFor="name" className="block text-sm font-medium text-slate-700">
                 Full Name
               </label>
               <div className="relative mt-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <User className="h-5 w-5 text-gray-500" />
+                  <User className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="name"
@@ -99,23 +107,23 @@ export default function RegisterComponent() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-                    errors.name ? 'ring-2 ring-red-500' : ''
+                  className={`block w-full rounded-md border bg-white py-2 pl-10 pr-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm ${
+                    errors.name ? 'border-red-300 ring-2 ring-red-200' : 'border-slate-300'
                   }`}
                   placeholder="Example name"
                 />
               </div>
-              {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+              {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                 Email address
               </label>
               <div className="relative mt-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-5 w-5 text-gray-500" />
+                  <Mail className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="email"
@@ -125,23 +133,23 @@ export default function RegisterComponent() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-                    errors.email ? 'ring-2 ring-red-500' : ''
+                  className={`block w-full rounded-md border bg-white py-2 pl-10 pr-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm ${
+                    errors.email ? 'border-red-300 ring-2 ring-red-200' : 'border-slate-300'
                   }`}
                   placeholder="you@example.com"
                 />
               </div>
-              {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                 Password
               </label>
               <div className="relative mt-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-gray-500" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="password"
@@ -151,8 +159,8 @@ export default function RegisterComponent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-                    errors.password ? 'ring-2 ring-red-500' : ''
+                  className={`block w-full rounded-md border bg-white py-2 pl-10 pr-10 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm ${
+                    errors.password ? 'border-red-300 ring-2 ring-red-200' : 'border-slate-300'
                   }`}
                   placeholder="••••••••"
                 />
@@ -160,7 +168,7 @@ export default function RegisterComponent() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-400 hover:text-gray-300 focus:outline-none"
+                    className="text-slate-400 hover:text-slate-600 focus:outline-none"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -170,18 +178,18 @@ export default function RegisterComponent() {
                   </button>
                 </div>
               </div>
-              {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
-              <p className="mt-1 text-xs text-gray-400">Password must be at least 8 characters</p>
+              {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
+              <p className="mt-1 text-xs text-slate-500">Password must be at least 8 characters</p>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
                 Confirm Password
               </label>
               <div className="relative mt-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-gray-500" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="confirmPassword"
@@ -191,8 +199,8 @@ export default function RegisterComponent() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`block w-full rounded-md border-0 bg-gray-800 py-2 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-                    errors.confirmPassword ? 'ring-2 ring-red-500' : ''
+                  className={`block w-full rounded-md border bg-white py-2 pl-10 pr-10 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm ${
+                    errors.confirmPassword ? 'border-red-300 ring-2 ring-red-200' : 'border-slate-300'
                   }`}
                   placeholder="••••••••"
                 />
@@ -200,7 +208,7 @@ export default function RegisterComponent() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="text-gray-400 hover:text-gray-300 focus:outline-none"
+                    className="text-slate-400 hover:text-slate-600 focus:outline-none"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -210,7 +218,7 @@ export default function RegisterComponent() {
                   </button>
                 </div>
               </div>
-              {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>}
             </div>
 
             {/* Submit Button */}
@@ -218,7 +226,7 @@ export default function RegisterComponent() {
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-75"
+                className="flex w-full justify-center rounded-md bg-slate-600 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-75 shadow-sm"
               >
                 {isLoading ? 'Creating account...' : 'Create account'}
               </button>
@@ -228,9 +236,9 @@ export default function RegisterComponent() {
 
         {/* Login link */}
         <div className="mt-4 text-center">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-slate-600">
             Already have an account?{' '}
-            <a href="/login" className="font-medium text-indigo-400 hover:text-indigo-300">
+            <a href="/login" className="font-medium text-slate-600 hover:text-slate-700">
               Sign in
             </a>
           </p>

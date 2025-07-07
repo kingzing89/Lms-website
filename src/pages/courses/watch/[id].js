@@ -196,9 +196,9 @@ export default function CourseVideoPlayer() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-300 mx-auto mb-4"></div>
           <p>Loading course...</p>
         </div>
       </div>
@@ -208,18 +208,18 @@ export default function CourseVideoPlayer() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-center max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Course Not Available</h2>
-          <p className="text-gray-400 mb-6">{error}</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-center max-w-md">
+          <h2 className="text-2xl font-semibold mb-4">Course Not Available</h2>
+          <p className="text-gray-500 mb-6">{error}</p>
           <div className="space-y-3">
             <button 
               onClick={() => window.location.reload()}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md mr-4"
+              className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-2 rounded-md mr-4 transition-colors"
             >
               Try Again
             </button>
-            <Link href="/dashboard" className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md">
+            <Link href="/dashboard" className="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-md transition-colors">
               Back to Dashboard
             </Link>
           </div>
@@ -231,11 +231,11 @@ export default function CourseVideoPlayer() {
   // No course found
   if (!course) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-center">
-          <h2 className="text-2xl font-bold mb-4">Course Not Found</h2>
-          <p className="text-gray-400 mb-6">The course you are looking for doe not exist or you do not have access to it.</p>
-          <Link href="/dashboard" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-center">
+          <h2 className="text-2xl font-semibold mb-4">Course Not Found</h2>
+          <p className="text-gray-500 mb-6">The course you are looking for does not exist or you do not have access to it.</p>
+          <Link href="/dashboard" className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-2 rounded-md transition-colors">
             Back to Dashboard
           </Link>
         </div>
@@ -248,11 +248,11 @@ export default function CourseVideoPlayer() {
   const currentChapter = getCurrentChapter();
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="bg-gray-800 py-4 px-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white py-4 px-6 shadow-sm border-b border-gray-200">
         <div className="container mx-auto">
           <Link href="/dashboard" passHref>
-            <div className="flex items-center text-blue-400 hover:text-blue-300 cursor-pointer">
+            <div className="flex items-center text-blue-500 hover:text-blue-600 cursor-pointer transition-colors">
               <ChevronLeft className="w-5 h-5 mr-1" />
               <span>Back to Dashboard</span>
             </div>
@@ -264,8 +264,8 @@ export default function CourseVideoPlayer() {
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-              <div className="relative aspect-video bg-black">
+            <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
+              <div className="relative aspect-video bg-gray-900">
                 {videoUrl && !videoError ? (
                   <video 
                     ref={videoRef}
@@ -281,7 +281,7 @@ export default function CourseVideoPlayer() {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-white">
+                    <div className="text-center text-gray-300">
                       {videoError ? (
                         <>
                           <p className="mb-4 text-red-400">Video could not be loaded</p>
@@ -295,7 +295,7 @@ export default function CourseVideoPlayer() {
                                 videoRef.current.load();
                               }
                             }}
-                            className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm"
+                            className="bg-blue-400 hover:bg-blue-500 px-4 py-2 rounded text-sm transition-colors"
                           >
                             Retry
                           </button>
@@ -320,7 +320,7 @@ export default function CourseVideoPlayer() {
                   <div className="absolute inset-0 flex items-center justify-center">
                     <button 
                       onClick={togglePlay}
-                      className="w-16 h-16 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+                      className="w-16 h-16 bg-blue-400 hover:bg-blue-500 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
                     >
                       <Play className="w-8 h-8 text-white ml-1" />
                     </button>
@@ -330,7 +330,7 @@ export default function CourseVideoPlayer() {
 
               {/* Video Controls */}
               {videoUrl && !videoError && (
-                <div className="p-4 bg-gray-700">
+                <div className="p-4 bg-gray-100 border-t border-gray-200">
                   <div className="mb-4">
                     <input 
                       type="range" 
@@ -338,11 +338,14 @@ export default function CourseVideoPlayer() {
                       max="100" 
                       value={progress || 0} 
                       onChange={handleProgressChange}
-                      className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                      className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #60a5fa 0%, #60a5fa ${progress}%, #d1d5db ${progress}%, #d1d5db 100%)`
+                      }}
                     />
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-300 text-sm">{formatTime(currentTime)}</span>
-                      <span className="text-gray-300 text-sm">{formatTime(duration)}</span>
+                      <span className="text-gray-600 text-sm">{formatTime(currentTime)}</span>
+                      <span className="text-gray-600 text-sm">{formatTime(duration)}</span>
                     </div>
                   </div>
 
@@ -350,7 +353,7 @@ export default function CourseVideoPlayer() {
                     <div className="flex items-center space-x-4">
                       <button 
                         onClick={togglePlay}
-                        className="text-white hover:text-blue-300 transition-colors"
+                        className="text-gray-700 hover:text-blue-500 transition-colors"
                       >
                         {isPlaying ? 
                           <Pause className="w-6 h-6" /> : 
@@ -359,7 +362,7 @@ export default function CourseVideoPlayer() {
                       </button>
                       
                       <div className="flex items-center space-x-2">
-                        <button className="text-white hover:text-blue-300">
+                        <button className="text-gray-700 hover:text-blue-500 transition-colors">
                           {getVolumeIcon()}
                         </button>
                         <input 
@@ -368,7 +371,10 @@ export default function CourseVideoPlayer() {
                           max="100" 
                           value={volume} 
                           onChange={handleVolumeChange}
-                          className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                          className="w-20 h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, #60a5fa 0%, #60a5fa ${volume}%, #d1d5db ${volume}%, #d1d5db 100%)`
+                          }}
                         />
                       </div>
                     </div>
@@ -381,7 +387,7 @@ export default function CourseVideoPlayer() {
                             videoRef.current.requestFullscreen();
                           }
                         }}
-                        className="text-white hover:text-blue-300 transition-colors"
+                        className="text-gray-700 hover:text-blue-500 transition-colors"
                       >
                         <Maximize className="w-5 h-5" />
                       </button>
@@ -391,17 +397,17 @@ export default function CourseVideoPlayer() {
               )}
             </div>
 
-            <div className="mt-6 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-xl font-bold text-white mb-2">
+            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
                 {currentVideo?.title || course.title}
               </h2>
-              <p className="text-gray-300 mb-2">
+              <p className="text-gray-600 mb-2">
                 Chapter: {currentChapter?.title || 'Introduction'}
               </p>
-              <p className="text-gray-300 mb-4">
+              <p className="text-gray-600 mb-4">
                 Instructor: {course.instructor || 'Unknown'}
               </p>
-              <p className="text-gray-400">{course.description}</p>
+              <p className="text-gray-500">{course.description}</p>
               <div className="mt-4 text-sm text-gray-500">
                 <p>Total Chapters: {course.chapters?.length || 0}</p>
                 <p>Course Duration: {course.duration} minutes</p>
@@ -411,16 +417,16 @@ export default function CourseVideoPlayer() {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-              <h3 className="text-white font-bold mb-4 pb-2 border-b border-gray-700">
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+              <h3 className="text-gray-800 font-semibold mb-4 pb-2 border-b border-gray-200">
                 Course Content
               </h3>
               
               {course.chapters && course.chapters.length > 0 ? (
                 <div className="space-y-4">
                   {course.chapters.map((chapter, chapterIndex) => (
-                    <div key={chapter._id || chapterIndex} className="border-b border-gray-700 pb-4 last:border-b-0">
-                      <h4 className="font-medium text-gray-200 mb-2">
+                    <div key={chapter._id || chapterIndex} className="border-b border-gray-200 pb-4 last:border-b-0">
+                      <h4 className="font-medium text-gray-700 mb-2">
                         {chapter.title}
                       </h4>
                       {chapter.videos && chapter.videos.length > 0 ? (
@@ -430,8 +436,8 @@ export default function CourseVideoPlayer() {
                               key={video._id || videoIndex}
                               className={`p-2 rounded-md cursor-pointer transition-colors ${
                                 chapterIndex === currentChapterIndex && videoIndex === currentVideoIndex
-                                  ? 'bg-blue-600 text-white' 
-                                  : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                                  ? 'bg-blue-100 text-blue-800 border border-blue-200' 
+                                  : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
                               }`}
                               onClick={() => selectVideo(chapterIndex, videoIndex)}
                             >
@@ -443,7 +449,7 @@ export default function CourseVideoPlayer() {
                                   </p>
                                 </div>
                                 {chapterIndex === currentChapterIndex && videoIndex === currentVideoIndex && (
-                                  <Play className="w-4 h-4" />
+                                  <Play className="w-4 h-4 text-blue-600" />
                                 )}
                               </div>
                             </li>
@@ -456,7 +462,7 @@ export default function CourseVideoPlayer() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center text-gray-400 py-8">
+                <div className="text-center text-gray-500 py-8">
                   <p>No chapters available yet</p>
                   <p className="text-sm mt-2">Course content is being prepared</p>
                 </div>

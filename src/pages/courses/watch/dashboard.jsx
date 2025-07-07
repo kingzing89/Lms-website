@@ -83,9 +83,9 @@ export default function StudentDashboard() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-600 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-300 mx-auto mb-4"></div>
           <p>Loading your dashboard...</p>
         </div>
       </div>
@@ -94,11 +94,11 @@ export default function StudentDashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-center">
-          <h2 className="text-2xl font-bold mb-4">Please Log In</h2>
-          <p className="text-gray-400 mb-6">You need to be logged in to access your dashboard</p>
-          <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700 text-center">
+          <h2 className="text-2xl font-semibold mb-4">Please Log In</h2>
+          <p className="text-gray-500 mb-6">You need to be logged in to access your dashboard</p>
+          <Link href="/login" className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-2 rounded-md transition-colors">
             Go to Login
           </Link>
         </div>
@@ -107,45 +107,45 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-32">
-      <div className="container mx-auto px-4 pt-6 pb-8 text-white">
+    <div className="min-h-screen bg-gray-50 py-32">
+      <div className="container mx-auto px-4 pt-6 pb-8 text-gray-700">
         <div className="mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
             Welcome back, {user.name?.split(" ")[0] || 'Student'}!
           </h2>
-          <p className="text-gray-400 mt-2">Continue your learning journey</p>
+          <p className="text-gray-500 mt-2">Continue your learning journey</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-gray-800 rounded-lg p-4">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-500 mr-3" />
+              <BookOpen className="h-8 w-8 text-blue-400 mr-3" />
               <div>
-                <p className="text-2xl font-bold text-white">{enrolledCourses.length}</p>
-                <p className="text-gray-400 text-sm">Enrolled Courses</p>
+                <p className="text-2xl font-semibold text-gray-800">{enrolledCourses.length}</p>
+                <p className="text-gray-500 text-sm">Enrolled Courses</p>
               </div>
             </div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-4">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <div className="flex items-center">
-              <Clock className="h-8 w-8 text-green-500 mr-3" />
+              <Clock className="h-8 w-8 text-green-400 mr-3" />
               <div>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-semibold text-gray-800">
                   {enrolledCourses.reduce((total, course) => total + (course.totalChapters || 0), 0)}
                 </p>
-                <p className="text-gray-400 text-sm">Total Chapters</p>
+                <p className="text-gray-500 text-sm">Total Chapters</p>
               </div>
             </div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-4">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <div className="flex items-center">
-              <User className="h-8 w-8 text-purple-500 mr-3" />
+              <User className="h-8 w-8 text-purple-400 mr-3" />
               <div>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-semibold text-gray-800">
                   {enrolledCourses.length > 0 ? 'Active' : 'Ready to Start'}
                 </p>
-                <p className="text-gray-400 text-sm">Learning Status</p>
+                <p className="text-gray-500 text-sm">Learning Status</p>
               </div>
             </div>
           </div>
@@ -154,11 +154,11 @@ export default function StudentDashboard() {
         {/* Enrolled Courses Section */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-white">
+            <h3 className="text-xl font-semibold text-gray-800">
               Your Enrolled Courses
             </h3>
             {enrolledCourses.length > 6 && (
-              <Link href="/courses" className="text-blue-400 hover:text-blue-300 text-sm font-medium">
+              <Link href="/courses" className="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
                 View All
               </Link>
             )}
@@ -167,30 +167,30 @@ export default function StudentDashboard() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-gray-800 rounded-lg h-64 animate-pulse"></div>
+                <div key={i} className="bg-white rounded-lg h-64 animate-pulse shadow-sm border border-gray-200"></div>
               ))}
             </div>
           ) : error ? (
-            <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 text-center">
-              <p className="text-red-400 mb-4">{error}</p>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <p className="text-red-600 mb-4">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+                className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md transition-colors"
               >
                 Try Again
               </button>
               {error.includes('session has expired') && (
-                <Link href="/login" className="mt-4 inline-block text-blue-400 hover:text-blue-300">
+                <Link href="/login" className="mt-4 inline-block text-blue-500 hover:text-blue-600 transition-colors">
                   Go to Login
                 </Link>
               )}
             </div>
           ) : enrolledCourses.length === 0 ? (
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <BookOpen className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-              <h4 className="text-xl font-semibold text-white mb-2">No Courses Yet</h4>
-              <p className="text-gray-400 mb-6">Start your learning journey by enrolling in a course</p>
-              <Link href="/courses" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md inline-block">
+            <div className="bg-white rounded-lg p-8 text-center shadow-sm border border-gray-200">
+              <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">No Courses Yet</h4>
+              <p className="text-gray-500 mb-6">Start your learning journey by enrolling in a course</p>
+              <Link href="/courses" className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-3 rounded-md inline-block transition-colors">
                 Browse Courses
               </Link>
             </div>
@@ -200,7 +200,7 @@ export default function StudentDashboard() {
                 const imageUrl = getCourseImageUrl(course);
                 
                 return (
-                  <div key={course.courseId} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <div key={course.courseId} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                     <div className="w-full h-32 sm:h-40 relative">
                       {imageUrl ? (
                         <img
@@ -219,13 +219,13 @@ export default function StudentDashboard() {
                       ) : null}
                       {/* Gradient fallback */}
                       <div 
-                        className={`w-full h-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center ${imageUrl ? 'hidden' : 'flex'}`}
+                        className={`w-full h-full bg-gradient-to-r from-blue-300 to-purple-300 flex items-center justify-center ${imageUrl ? 'hidden' : 'flex'}`}
                       >
                         <BookOpen className="h-12 w-12 text-white" />
                       </div>
                     </div>
                     <div className="p-4">
-                      <h4 className="text-lg font-semibold mb-2 text-gray-900 line-clamp-2">
+                      <h4 className="text-lg font-semibold mb-2 text-gray-800 line-clamp-2">
                         {course.title}
                       </h4>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-1">
@@ -244,7 +244,7 @@ export default function StudentDashboard() {
                       </div>
 
                       <Link href={`/courses/watch/${course.courseId}`}>
-                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md flex items-center justify-center mt-4 transition-colors">
+                        <button className="w-full bg-blue-400 hover:bg-blue-500 text-white py-2 px-4 rounded-md flex items-center justify-center mt-4 transition-colors">
                           <span>Continue Learning</span>
                           <ChevronRight className="h-4 w-4 ml-1" />
                         </button>

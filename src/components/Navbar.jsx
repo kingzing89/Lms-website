@@ -29,21 +29,23 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-gray-900 shadow-lg border-b border-gray-800 fixed w-full z-10 ">
+    <header className="bg-peach-100/80 backdrop-blur-md shadow-lg border-b border-purple-200/30 fixed w-full z-10">
       <div className="container mx-auto px-4 ">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-blue-400">
-            MyLMS
+          <Link href="/" className="text-2xl font-bold text-purple-600 hover:text-purple-700 transition-colors">
+            TechTutor365
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8 text-gray-300">
-            <Link href="/courses" className="hover:text-blue-400 font-medium transition-colors">
+          <div className="hidden md:flex items-center space-x-8 text-gray-700">
+            <Link href="/courses" className="hover:text-purple-600 font-medium transition-colors duration-200 relative group">
               Courses
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-200 group-hover:w-full"></span>
             </Link>
-            <Link href="/subscriptions" className="hover:text-blue-400 font-medium transition-colors">
+            <Link href="/subscriptions" className="hover:text-purple-600 font-medium transition-colors duration-200 relative group">
               Subscriptions
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-200 group-hover:w-full"></span>
             </Link>
           </div>
 
@@ -51,24 +53,24 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {isLoggedIn ? (
               <div className="relative" ref={dropdownRef}>
-                <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center focus:outline-none">
-                  <div className="w-10 h-10 rounded-full border-2 border-blue-400 bg-blue-700 flex items-center justify-center text-white font-medium text-lg">
+                <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center focus:outline-none group">
+                  <div className="w-10 h-10 rounded-full border-2 border-purple-400 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium text-lg shadow-lg group-hover:shadow-xl transition-all duration-200">
                     {user?.name?.charAt(0) || 'U'}
                   </div>
-                  <svg className="w-4 h-4 ml-1 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 ml-1 text-gray-600 group-hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-20">
-                    <Link href="/courses/watch/dashboard" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl py-2 z-20 border border-purple-200/30">
+                    <Link href="/courses/watch/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200">
                       Dashboard
                     </Link>
-                    <div className="border-t border-gray-700 my-1"></div>
+                    <div className="border-t border-purple-200/30 my-1"></div>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                     >
                       Logout
                     </button>
@@ -79,13 +81,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-100 px-4 py-2 hover:text-blue-400 transition-colors duration-300"
+                  className="text-gray-700 px-4 py-2 hover:text-purple-600 transition-colors duration-200 font-medium"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium"
                 >
                   Become a Member
                 </Link>
@@ -95,7 +97,7 @@ export default function Navbar() {
 
           {/* Mobile menu toggle */}
           <div className="md:hidden flex items-center">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-300 hover:text-blue-400" aria-label="Toggle menu">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-700 hover:text-purple-600 transition-colors" aria-label="Toggle menu">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -110,34 +112,34 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden px-4 pt-2 pb-4 bg-gray-900 border-t border-gray-800">
-          <Link href="/courses" className="block px-3 py-2 text-gray-300 hover:text-blue-400">
+        <div className="md:hidden px-4 pt-2 pb-4 bg-white/90 backdrop-blur-md border-t border-purple-200/30">
+          <Link href="/courses" className="block px-3 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
             Courses
           </Link>
-          <Link href="/subscriptions" className="block px-3 py-2 text-gray-300 hover:text-blue-400">
+          <Link href="/subscriptions" className="block px-3 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
             Subscriptions
           </Link>
 
           {isLoggedIn ? (
             <>
-              <Link href="/courses/watch/dashboard" className="block px-3 py-2 text-gray-300 hover:text-blue-400">
+              <Link href="/courses/watch/dashboard" className="block px-3 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-3 py-2 text-red-400 hover:text-red-300"
+                className="block w-full text-left px-3 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
               >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="block px-3 py-2 text-gray-300 hover:text-blue-400">
+              <Link href="/login" className="block px-3 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
                 Login
               </Link>
               <Link
                 href="/register"
-                className="block px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                className="block px-3 py-3 mt-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg text-center font-medium"
               >
                 Become a Member
               </Link>

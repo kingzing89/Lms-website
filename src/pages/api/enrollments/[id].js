@@ -1,5 +1,3 @@
-
-
 import connectToDatabase from '../../../lib/mongodb';
 import Course from '@/models/Course';
 import Enrollment from '@/models/Enrollment';
@@ -22,7 +20,12 @@ export default async function handler(req, res) {
       
       const userId = user._id;
 
-      const activeSubscription = await UserSubscription.getActiveSubscription(userId);
+      // FIXED: Use direct query instead of non-existent static method
+      const activeSubscription = await UserSubscription.findOne({
+        userId: userId,
+        status: 'active',
+        endDate: { $gte: new Date() }
+      }).populate('subscriptionPlanId');
       
       if (!activeSubscription) {
         return res.status(403).json({ 
@@ -37,8 +40,6 @@ export default async function handler(req, res) {
       if (!course) {
         return res.status(404).json({ success: false, error: 'Course not found' });
       }
-
-     
 
       const existingEnrollment = await Enrollment.findOne({ userId, courseId });
       
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
         data: {
           enrollmentId: enrollment._id,
           courseTitle: course.title,
-          subscriptionPlan: activeSubscription.subscriptionPlanId.name // Include subscription info
+          subscriptionPlan: activeSubscription.subscriptionPlanId?.title || 'Premium Subscription'
         }
       });
 
@@ -71,7 +72,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: 'Already enrolled in this course' });
       }
 
-      res.status(500).json({ success: false, error: 'Failed to enroll in course' });
+      res.status(500).json({ 
+        success: false, 
+        error: 'Failed to enroll in course',
+        details: error.message // Temporarily include for debugging
+      });
     }
 
   } else if (req.method === 'DELETE') {
@@ -86,8 +91,12 @@ export default async function handler(req, res) {
       
       const userId = user._id;
 
-   
-      const activeSubscription = await UserSubscription.getActiveSubscription(userId);
+      // FIXED: Use direct query
+      const activeSubscription = await UserSubscription.findOne({
+        userId: userId,
+        status: 'active',
+        endDate: { $gte: new Date() }
+      });
       
       if (!activeSubscription) {
         return res.status(403).json({ 

@@ -32,8 +32,9 @@ export default function Navbar() {
 
   return (
     <header className="bg-peach-100/80 backdrop-blur-md shadow-lg border-b border-purple-200/30 fixed w-full z-10">
-      <div className="container mx-auto px-4 ">
+      <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
+          {/* Logo - Left */}
           <Link
             href="/"
             className="flex items-center space-x-3 text-2xl font-bold text-purple-600 hover:text-purple-700 transition-colors"
@@ -49,8 +50,8 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8 text-gray-700">
+          {/* Desktop Nav - Center */}
+          <div className="hidden md:flex items-center space-x-8 text-gray-700 absolute left-1/2 transform -translate-x-1/2">
             <Link
               href="/courses"
               className="hover:text-purple-600 font-medium transition-colors duration-200 relative group"
@@ -67,7 +68,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Auth */}
+          {/* Desktop Auth - Right */}
           <div className="hidden md:flex items-center space-x-4">
             {isLoggedIn ? (
               <div className="relative" ref={dropdownRef}>

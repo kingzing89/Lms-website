@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const SubscriptionPlanSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -10,8 +10,10 @@ const SubscriptionPlanSchema = new mongoose.Schema({
   },
   isPopular: { type: Boolean, default: false },
   buttonText: { type: String, required: true },
+}, {
+  timestamps: true
 });
 
-const SubscriptionPlan = mongoose.models.SubscriptionPlan || mongoose.model('SubscriptionPlan', SubscriptionPlanSchema);
+export const SubscriptionPlan = mongoose.models.SubscriptionPlan || mongoose.model('SubscriptionPlan', SubscriptionPlanSchema);
 
-module.exports = SubscriptionPlan;
+export default SubscriptionPlan;

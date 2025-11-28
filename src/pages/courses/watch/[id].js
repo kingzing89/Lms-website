@@ -71,11 +71,11 @@ export default function CourseVideoPlayer() {
       return videoPath;
     }
     
-    const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET || 'adminjs-media-storage';
-    const region = process.env.NEXT_PUBLIC_AWS_REGION || 'ap-south-1';
+    const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET || 'lms-bucket001';
+    const region = process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-2';
     
     const cleanPath = videoPath.startsWith('/') ? videoPath.slice(1) : videoPath;
-    
+
     return `https://${bucketName}.s3.${region}.amazonaws.com/${cleanPath}`;
   };
 

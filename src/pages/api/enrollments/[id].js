@@ -3,6 +3,7 @@ import Course from '@/models/Course';
 import Enrollment from '@/models/Enrollment';
 import UserSubscription from '@/models/UserSubscription';
 import User from '@/models/User';
+import { SubscriptionPlan } from '@/models/SubscriptionPlan';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
